@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factory Inventory Management - Architecture</title>
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --green: #16a34a;
+    --blue: #2563eb;
+    --yellow: #ca8a04;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+  }
+  header { background: var(--ink); color: #fff; padding: 40px 24px; }
+  header .inner, main { max-width: 1040px; margin: 0 auto; }
+  header h1 { margin: 0 0 6px; font-size: 28px; font-weight: 600; }
+  header p { margin: 0; color: #cbd5e1; }
+  main { padding: 32px 24px 64px; }
+  section { margin-bottom: 40px; }
+  h2 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+  .grid { display: grid; gap: 16px; }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+  h3 { margin: 0 0 8px; font-size: 15px; }
+  ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  li { margin-bottom: 4px; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .04em;
+         text-transform: uppercase; padding: 2px 8px; border-radius: 999px; margin-bottom: 8px; }
+  .t-blue { background: #dbeafe; color: var(--blue); }
+  .t-green { background: #dcfce7; color: var(--green); }
+  .t-yellow { background: #fef9c3; color: var(--yellow); }
+
+  /* Architecture diagram */
+  .arch { display: grid; grid-template-columns: 1fr 56px 1fr 56px 1fr; align-items: stretch; gap: 0; }
+  .arch .arrow { display: flex; flex-direction: column; justify-content: center; align-items: center;
+                 font-size: 11px; color: var(--muted); text-align: center; }
+  .arch .arrow span.line { font-size: 22px; color: var(--ink); line-height: 1; }
+  .node { background: var(--card); border: 1px solid var(--line); border-top: 3px solid var(--ink);
+          border-radius: 8px; padding: 16px; }
+  .node.blue { border-top-color: var(--blue); }
+  .node.green { border-top-color: var(--green); }
+  .node.yellow { border-top-color: var(--yellow); }
+  .node h3 { margin-bottom: 2px; }
+  .node .port { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+
+  /* Data flow */
+  ol.flow { list-style: none; counter-reset: step; margin: 0; padding: 0; }
+  ol.flow li { counter-increment: step; position: relative; padding: 12px 16px 12px 52px;
+               background: var(--card); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 10px; }
+  ol.flow li::before { content: counter(step); position: absolute; left: 14px; top: 12px;
+                       width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: #fff;
+                       font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+  ol.flow strong { display: block; font-size: 14px; }
+  ol.flow span { font-size: 13px; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card);
+          border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f1f5f9; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+
+  @media (max-width: 760px) {
+    .arch { grid-template-columns: 1fr; }
+    .arch .arrow { padding: 8px 0; flex-direction: row; gap: 8px; }
+    .arch .arrow span.line { transform: rotate(90deg); }
+    .g2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <h1>Factory Inventory Management System</h1>
+    <p>Architecture overview: system layout, technology stack, and data flow</p>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <h2>Executive Summary</h2>
+    <p class="sub">A full-stack demo application with no database.</p>
+    <div class="card">
+      A Vue 3 single-page application (port 3000) calls a FastAPI REST service (port 8001). The API serves
+      data loaded once at startup from static JSON files into memory, filters it per request, and validates
+      responses with Pydantic. Four global filters (time period, warehouse, category, order status) drive every view.
+    </div>
+  </section>
+
+  <section>
+    <h2>System Architecture</h2>
+    <p class="sub">Three layers, communicating over HTTP and a one-time file load.</p>
+    <div class="arch">
+      <div class="node blue">
+        <h3>Frontend</h3>
+        <div class="port">Vue 3 SPA &middot; Vite &middot; :3000</div>
+        <ul>
+          <li><code>main.js</code> &ndash; app + vue-router</li>
+          <li><code>views/</code> &ndash; Dashboard, Inventory, Orders, Demand, Spending, Reports, Backlog</li>
+          <li><code>components/</code> &ndash; FilterBar, detail modals, profile menu</li>
+          <li><code>composables/</code> &ndash; useFilters, useI18n, useAuth</li>
+          <li><code>api.js</code> &ndash; Axios client</li>
+        </ul>
+      </div>
+      <div class="arrow"><span class="line">&rarr;</span>REST / JSON<br>query params</div>
+      <div class="node green">
+        <h3>Backend API</h3>
+        <div class="port">FastAPI &middot; Uvicorn &middot; :8001</div>
+        <ul>
+          <li><code>main.py</code> &ndash; routes, CORS, Pydantic models</li>
+          <li><code>apply_filters</code> / <code>filter_by_month</code> &ndash; in-memory filtering</li>
+          <li>Aggregations for dashboard, spending, and reports</li>
+          <li>Auto docs at <code>/docs</code></li>
+        </ul>
+      </div>
+      <div class="arrow"><span class="line">&larr;</span>loaded once<br>at startup</div>
+      <div class="node yellow">
+        <h3>Data Layer</h3>
+        <div class="port">JSON files &middot; in memory</div>
+        <ul>
+          <li><code>mock_data.py</code> &ndash; loads JSON into module-level lists</li>
+          <li><code>server/data/*.json</code> &ndash; inventory, orders, demand, backlog, purchase orders, spending, transactions</li>
+          <li><code>generate_data.py</code> &ndash; seed data generator</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tech Stack</h2>
+    <p class="sub">Dependencies taken from <code>package.json</code> and <code>pyproject.toml</code>.</p>
+    <div class="grid g3">
+      <div class="card">
+        <span class="tag t-blue">Frontend</span>
+        <ul>
+          <li>Vue 3 (Composition API)</li>
+          <li>Vue Router 4</li>
+          <li>Axios</li>
+          <li>Vite 8 (Node 20.19+ / 22.12+)</li>
+          <li>Custom SVG charts, CSS Grid</li>
+          <li>Built-in i18n (English, Japanese)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag t-green">Backend</span>
+        <ul>
+          <li>Python 3.11+</li>
+          <li>FastAPI</li>
+          <li>Uvicorn</li>
+          <li>Pydantic 2</li>
+          <li>uv for dependency management</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="tag t-yellow">Data &amp; Tooling</span>
+        <ul>
+          <li>Static JSON files, no database</li>
+          <li>pytest, pytest-asyncio, httpx, pytest-cov</li>
+          <li>Backend tests in <code>tests/backend</code></li>
+          <li>Claude Code agents, skills, and MCP config in <code>.claude/</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Data Flow</h2>
+    <p class="sub">What happens when a user changes a filter.</p>
+    <div class="grid g2">
+      <ol class="flow">
+        <li><strong>User changes a filter</strong><span>FilterBar updates shared refs in <code>useFilters</code> (singleton state).</span></li>
+        <li><strong>View reacts</strong><span>Watchers call <code>getCurrentFilters()</code>, which maps the period to a <code>month</code> parameter.</span></li>
+        <li><strong>API client builds the request</strong><span><code>api.js</code> omits filters set to <code>all</code> and sends the rest as query params.</span></li>
+        <li><strong>FastAPI filters in memory</strong><span><code>apply_filters</code> and <code>filter_by_month</code> narrow the lists loaded from JSON.</span></li>
+      </ol>
+      <ol class="flow" style="counter-reset: step 4;">
+        <li><strong>Aggregate and validate</strong><span>Endpoints compute totals and Pydantic validates the response model.</span></li>
+        <li><strong>JSON returned</strong><span>CORS is open to all origins for local development.</span></li>
+        <li><strong>State updated</strong><span>Raw data lands in refs such as <code>allOrders</code> and <code>inventoryItems</code>.</span></li>
+        <li><strong>UI re-renders</strong><span>Computed properties derive chart and table data from the refs.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>API Surface</h2>
+    <p class="sub">All endpoints are read-only <code>GET</code> requests under <code>/api</code>.</p>
+    <table>
+      <thead><tr><th>Endpoint</th><th>Filters</th><th>Used by</th></tr></thead>
+      <tbody>
+        <tr><td><code>/api/inventory</code>, <code>/api/inventory/{id}</code></td><td>warehouse, category</td><td>Inventory</td></tr>
+        <tr><td><code>/api/orders</code>, <code>/api/orders/{id}</code></td><td>warehouse, category, status, month</td><td>Orders</td></tr>
+        <tr><td><code>/api/dashboard/summary</code></td><td>warehouse, category, status, month</td><td>Dashboard</td></tr>
+        <tr><td><code>/api/demand</code></td><td>none</td><td>Demand</td></tr>
+        <tr><td><code>/api/backlog</code></td><td>none</td><td>Backlog</td></tr>
+        <tr><td><code>/api/spending/summary | monthly | categories | transactions</code></td><td>none</td><td>Spending</td></tr>
+        <tr><td><code>/api/reports/quarterly</code>, <code>/api/reports/monthly-trends</code></td><td>none</td><td>Reports</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Design Notes and Constraints</h2>
+    <div class="grid g3">
+      <div class="card">
+        <h3>Stateless and resettable</h3>
+        <ul><li>Restarting the API reloads the JSON files.</li><li>No persistence layer or migrations.</li></ul>
+      </div>
+      <div class="card">
+        <h3>Filter limits</h3>
+        <ul><li>Inventory has no time dimension, so it ignores the month filter.</li><li>Demand, backlog, spending, and reports are unfiltered.</li></ul>
+      </div>
+      <div class="card">
+        <h3>Keep in sync</h3>
+        <ul><li>Update Pydantic models when the JSON structure changes.</li><li>The API base URL is hardcoded in <code>api.js</code>.</li></ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

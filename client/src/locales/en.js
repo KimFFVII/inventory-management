@@ -6,6 +6,9 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    reports: 'Reports',
+    menu: 'Menu',
+    closeMenu: 'Close menu',
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System'
   },
@@ -190,6 +193,7 @@ export default {
 
   // Filters
   filters: {
+    reset: 'Reset filters',
     timePeriod: 'Time Period',
     location: 'Location',
     category: 'Category',
@@ -312,6 +316,28 @@ export default {
   },
 
   // Common
+  purchaseOrder: {
+    createTitle: 'Create Purchase Order',
+    viewTitle: 'Purchase Order Details',
+    item: 'Item',
+    shortage: 'Shortage',
+    supplierName: 'Supplier Name',
+    quantity: 'Quantity',
+    unitCost: 'Unit Cost',
+    totalCost: 'Total Cost',
+    expectedDelivery: 'Expected Delivery Date',
+    notes: 'Notes (optional)',
+    poId: 'PO ID',
+    status: 'Status',
+    createdDate: 'Created Date',
+    submit: 'Create Purchase Order',
+    submitting: 'Creating...',
+    loading: 'Loading purchase order...',
+    loadFailed: 'Failed to load purchase order',
+    createFailed: 'Failed to create purchase order',
+    required: 'Please fill in all required fields with valid values'
+  },
+
   common: {
     loading: 'Loading...',
     error: 'Error',
