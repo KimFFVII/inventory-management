@@ -11,7 +11,7 @@
       <div class="demand-trend-cards">
         <div class="trend-card increasing-card">
           <div class="trend-header">
-            <div class="trend-icon">↑</div>
+            <div class="trend-icon"><svg viewBox="0 0 20 20" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 16V4M5 9l5-5 5 5" /></svg></div>
             <div>
               <div class="trend-label">{{ t('demand.increasingDemand') }}</div>
               <div class="trend-count">{{ t('demand.itemsCount', { count: getForecastsByTrend('increasing').length }) }}</div>
@@ -30,7 +30,7 @@
 
         <div class="trend-card stable-card">
           <div class="trend-header">
-            <div class="trend-icon">→</div>
+            <div class="trend-icon"><svg viewBox="0 0 20 20" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" /></svg></div>
             <div>
               <div class="trend-label">{{ t('demand.stableDemand') }}</div>
               <div class="trend-count">{{ t('demand.itemsCount', { count: getForecastsByTrend('stable').length }) }}</div>
@@ -49,7 +49,7 @@
 
         <div class="trend-card decreasing-card">
           <div class="trend-header">
-            <div class="trend-icon">↓</div>
+            <div class="trend-icon"><svg viewBox="0 0 20 20" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4v12M5 11l5 5 5-5" /></svg></div>
             <div>
               <div class="trend-label">{{ t('demand.decreasingDemand') }}</div>
               <div class="trend-count">{{ t('demand.itemsCount', { count: getForecastsByTrend('decreasing').length }) }}</div>
@@ -181,12 +181,12 @@ export default {
 
       // If change is within ±2%, consider it stable and show blue
       if (changePercent <= 2) {
-        return '#3b82f6' // Blue for stable
+        return 'var(--color-accent)' // stable
       }
 
-      if (change > 0) return '#10b981' // Green for increasing
-      if (change < 0) return '#ef4444' // Red for decreasing
-      return '#3b82f6' // Blue for no change
+      if (change > 0) return 'var(--color-success)' // increasing
+      if (change < 0) return 'var(--color-danger)' // decreasing
+      return 'var(--color-accent)' // no change
     }
 
     const translatePeriod = (period) => {
@@ -226,144 +226,151 @@ export default {
 <style scoped>
 .demand-trend-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
 }
 
 .trend-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 1.5rem;
-  transition: all 0.2s ease;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+  transition: box-shadow var(--transition-fast);
 }
 
 .trend-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-popover);
 }
 
 .increasing-card {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid var(--color-success);
 }
 
 .stable-card {
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--color-accent);
 }
 
 .decreasing-card {
-  border-left: 4px solid #ef4444;
+  border-left: 4px solid var(--color-danger);
 }
 
 .trend-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #f1f5f9;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .trend-icon {
-  width: 48px;
-  height: 48px;
+  width: 3rem;
+  height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  font-size: 1.75rem;
-  font-weight: 700;
+  border-radius: var(--radius-md);
   flex-shrink: 0;
 }
 
 .increasing-card .trend-icon {
-  background: #d1fae5;
-  color: #059669;
+  background: var(--color-success-soft);
+  color: var(--color-success-strong);
 }
 
 .stable-card .trend-icon {
-  background: #dbeafe;
-  color: #2563eb;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
 }
 
 .decreasing-card .trend-icon {
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--color-danger-soft);
+  color: var(--color-danger-strong);
 }
 
 .trend-label {
-  font-size: 0.875rem;
+  font-size: var(--font-size-base);
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .trend-count {
-  font-size: 1.5rem;
+  font-size: var(--font-size-xl);
   font-weight: 700;
-  color: #0f172a;
-  margin-top: 0.25rem;
+  color: var(--color-text);
+  margin-top: var(--space-1);
 }
 
 .trend-items {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .trend-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  background: #f8fafc;
-  border-radius: 6px;
-  transition: background 0.2s;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
 }
 
 .trend-item:hover {
-  background: #f1f5f9;
+  background: var(--color-surface-hover);
 }
 
 .item-name {
-  font-size: 0.875rem;
-  color: #0f172a;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
   font-weight: 500;
   flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-right: 1rem;
+  margin-right: var(--space-4);
 }
 
 .item-change {
-  font-size: 0.813rem;
+  font-size: var(--font-size-sm);
   font-weight: 700;
   flex-shrink: 0;
 }
 
 .increasing-card .item-change {
-  color: #059669;
+  color: var(--color-success);
 }
 
 .stable-card .item-change {
-  color: #3b82f6;
+  color: var(--color-accent);
 }
 
 .decreasing-card .item-change {
-  color: #dc2626;
+  color: var(--color-danger);
 }
 
 .item-change.neutral {
-  color: #64748b;
+  color: var(--color-text-muted);
 }
 
 .more-items {
-  font-size: 0.813rem;
-  color: #64748b;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
   font-style: italic;
   text-align: center;
-  padding: 0.5rem;
+  padding: var(--space-2);
+}
+
+/* Breakpoint: tablet and below, tighten gaps between trend cards */
+@media (max-width: 900px) {
+  .demand-trend-cards {
+    gap: var(--space-4);
+  }
 }
 </style>

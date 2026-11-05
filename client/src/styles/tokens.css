@@ -1,0 +1,75 @@
+/* Design tokens: single source of truth for color, spacing, shape, type and layout.
+   Values map the palette the app already used (slate UI chrome, blue accent, status colors). */
+:root {
+  /* Color */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-body: #1e293b;
+  --color-text-muted: #64748b;
+  --color-accent: #2563eb;
+  --color-accent-soft: #eff6ff;
+  --color-success: #059669;
+  --color-warning: #ca8a04;
+  --color-orange: #ea580c;
+  --color-danger: #dc2626;
+  --color-border-strong: #cbd5e1;
+  --color-text-on-accent: #ffffff;
+  --color-accent-strong: #1e40af;
+  /* Soft status fills + darker text pairs (text/bg contrast >= 4.5:1 for badges and alerts) */
+  --color-success-soft: #d1fae5;
+  --color-success-strong: #065f46;
+  --color-warning-soft: #fef3c7;
+  --color-warning-strong: #854d0e;
+  --color-orange-soft: #fed7aa;
+  --color-orange-strong: #92400e;
+  --color-danger-soft: #fee2e2;
+  --color-danger-strong: #991b1b;
+  --color-indigo-soft: #e0e7ff;
+  --color-indigo-strong: #3730a3;
+  --color-purple: #8b5cf6; /* chart series only (Spending "operational") */
+  --color-overlay: rgb(15 23 42 / 0.5);
+
+  /* Spacing scale (4px base). --space-4 inside cards, --space-6 between cards and sections. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Shape and depth */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.06);
+  --shadow-popover: 0 10px 25px rgb(15 23 42 / 0.12);
+  --shadow-drawer: 0 0 24px rgb(15 23 42 / 0.2);
+  --focus-ring: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+  --transition-fast: 0.15s ease;
+
+  /* Type */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-base: 0.875rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.875rem;
+  --font-size-stat: 2.25rem;
+
+  /* Layout */
+  --sidebar-width: 15rem;
+  --sidebar-width-collapsed: 4rem;
+  --content-max-width: 1400px;
+  --topbar-height: 3.5rem;
+  --control-height: 2.25rem;
+  /* Filter bar sits below the sidebar so the mobile drawer can overlay it. */
+  --z-filterbar: 90;
+  --z-sidebar: 100;
+  --z-topbar: 95;
+  --z-overlay: 99;
+  --z-popover: 110;
+}

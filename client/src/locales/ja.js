@@ -6,6 +6,9 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    reports: 'レポート',
+    menu: 'メニュー',
+    closeMenu: 'メニューを閉じる',
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム'
   },
@@ -190,6 +193,7 @@ export default {
 
   // Filters
   filters: {
+    reset: 'フィルターをリセット',
     timePeriod: '期間',
     location: '場所',
     category: 'カテゴリ',
@@ -312,6 +316,28 @@ export default {
   },
 
   // Common
+  purchaseOrder: {
+    createTitle: '発注書の作成',
+    viewTitle: '発注書の詳細',
+    item: '品目',
+    shortage: '不足数',
+    supplierName: '仕入先名',
+    quantity: '数量',
+    unitCost: '単価',
+    totalCost: '合計金額',
+    expectedDelivery: '納品予定日',
+    notes: '備考（任意）',
+    poId: '発注書ID',
+    status: 'ステータス',
+    createdDate: '作成日',
+    submit: '発注書を作成',
+    submitting: '作成中...',
+    loading: '発注書を読み込み中...',
+    loadFailed: '発注書の読み込みに失敗しました',
+    createFailed: '発注書の作成に失敗しました',
+    required: '必須項目をすべて正しく入力してください'
+  },
+
   common: {
     loading: '読み込み中...',
     error: 'エラー',
